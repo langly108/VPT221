@@ -28,6 +28,7 @@ public class Draw {
 
 
     public static JFrame draw() throws IOException {
+        /* считываем файл, если его нет, создаем новый*/
         File file = new File("./file.txt");
         try (InputStream in = new FileInputStream(file)) {
         } catch (FileNotFoundException e) {
@@ -47,47 +48,43 @@ public class Draw {
         outputArea.setEditable(false);
         f.add(outputArea);
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setBounds(20,10,20,20);
-        f.add(fileChooser);
-
+        /* Кнопка добавления строки*/
         JButton inputButton = new JButton("Ввод");
         inputButton.setBounds(20,200,100,30);
         f.add(inputButton);
-        inputButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String inputText = inputField.getText();
-                outputArea.setText("");
-                InputStream is = null;
-                try {
-                    is = new FileInputStream(file);
-                } catch (FileNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-                if (is == null) {
-                    outputArea.setText("File not found! Error.");
-                }
-                try {
-                    int gotLine = 0;
-                    assert is != null;
-                    String text = convertInputStreamToString(is);
-                    String[] textsplitted = text.split("\\r?\\n");
-                    for (String line: textsplitted) {
-                        if (Objects.equals(inputText, line)) {
-                            outputArea.setText("Text " + inputText + " already exists in the file.");
-                            gotLine = 1;
-                        }
+        inputButton.addActionListener(e -> {
+            String inputText = inputField.getText();
+            outputArea.setText("");
+            InputStream is = null;
+            try {
+                is = new FileInputStream(file);
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
+            if (is == null) {
+                outputArea.setText("File not found! Error.");
+            }
+            try {
+                int gotLine = 0;
+                assert is != null;
+                String text = convertInputStreamToString(is);
+                String[] textsplitted = text.split("\\r?\\n");
+                for (String line: textsplitted) {
+                    if (Objects.equals(inputText.toLowerCase(), line.toLowerCase())) {
+                        outputArea.setText("Text " + inputText + " already exists in the file.");
+                        gotLine = 1;
+                        break;
                     }
-                    if (gotLine != 1) {
-                        writeToFile(inputText, "./file.txt");
-                    }
-                } catch (IOException ex) {
-                    outputArea.setText("File is corrupted! Error.");
                 }
+                if (gotLine != 1) {
+                    writeToFile(inputText, "./file.txt");
+                }
+            } catch (IOException ex) {
+                outputArea.setText("File is corrupted! Error.");
             }
         });
 
+        /*Кнопка очистки полей*/
         JButton clearButton = new JButton("Очистить");
         clearButton.setBounds(140,200,100,30);
         f.add(clearButton);
@@ -96,6 +93,7 @@ public class Draw {
             outputArea.setText("");
         });
 
+        /*Закрыть приложение*/
         JButton closeButton = new JButton("Закрыть");
         closeButton.setBounds(260, 200,100,30);
         f.add(closeButton);
