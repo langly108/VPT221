@@ -16,7 +16,7 @@ public class Draw {
         while((length = is.read(buffer)) != -1) {
             result.write(buffer, 0, length);
         }
-        return result.toString(StandardCharsets.UTF_8);
+        return result.toString();
     }
 
     public static void writeToFile(String text, String filename) throws IOException {
