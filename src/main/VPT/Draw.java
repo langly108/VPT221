@@ -1,10 +1,7 @@
 package VPT;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class Draw {
@@ -21,8 +18,8 @@ public class Draw {
 
     public static void writeToFile(String text, String filename) throws IOException {
         BufferedWriter wr = new BufferedWriter(new FileWriter(filename,true));
-        wr.append('\n');
         wr.append(text);
+        wr.append('\n');
         wr.close();
     }
 
